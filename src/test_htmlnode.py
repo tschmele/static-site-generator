@@ -26,7 +26,7 @@ class TestHTMLNode(unittest.TestCase):
 
     def test_props(self):
         node = HTMLNode("a", "boot.dev", [HTMLNode()], {"href":"https://www.boot.dev"})
-        text = f"HTMLNode(a, boot.dev, [HTMLNode(None, None, None, None)], href=https://www.boot.dev)"
+        text = f'HTMLNode(a, boot.dev, [HTMLNode(None, None, None, None)], href="https://www.boot.dev")'
         self.assertEqual(str(node),text)
 
     def test_tohtmlerr(self):
