@@ -1,5 +1,6 @@
 from textnode import TextNode, TextType
 from htmlnode import LeafNode, ParentNode
+from splitnodes import split_nodes_delimiter
 
 def text_node_to_html_node(node:TextNode) -> LeafNode:
     match node.text_type:
@@ -23,8 +24,9 @@ def text_node_to_html_node(node:TextNode) -> LeafNode:
             raise ValueError("Unknown TextType")
 
 def main():
-    node = TextNode("This is some anchor text", TextType.LINK, "https://www.boot.dev")
-    print(node)
+    node = TextNode("**This** has a **bold word**", TextType.PLAIN)
+    new_nodes = split_nodes_delimiter([node], "**", TextType.BOLD)
+    print(new_nodes)
 
 if __name__ == "__main__":
     main()
