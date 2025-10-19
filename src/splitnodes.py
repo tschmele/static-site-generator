@@ -38,16 +38,21 @@ def split_nodes_image(old_nodes:list[TextNode]) -> list[TextNode]:
     for node in old_nodes:
         if node.text_type != TextType.PLAIN:
             new_nodes.append(node)
-        
-        images = extract_markdown_images(node.text)
-        i = 0
-        for img in images:
-            md = f"![{img[0]}]({img[1]})"
-            if len(node.text[i:i+node.text[i:].index(md)]) > 0:
-                new_nodes.append(TextNode(node.text[i:i+node.text[i:].index(md)], TextType.PLAIN))
-                i += node.text[i:].index(md)
-            new_nodes.append(TextNode(img[0], TextType.IMAGE, img[1]))
-            i += len(md)
+        else:
+            images = extract_markdown_images(node.text)
+            if len(images) > 0:
+                i = 0
+                for img in images:
+                    md = f"![{img[0]}]({img[1]})"
+                    if len(node.text[i:i+node.text[i:].index(md)]) > 0:
+                        new_nodes.append(TextNode(node.text[i:i+node.text[i:].index(md)], TextType.PLAIN))
+                        i += node.text[i:].index(md)
+                    new_nodes.append(TextNode(img[0], TextType.IMAGE, img[1]))
+                    i += len(md)
+                if len(node.text[i:]) > 0:
+                    new_nodes.append(TextNode(node.text[i:], TextType.PLAIN))
+            else:
+                new_nodes.append(node)
 
     return new_nodes
 
@@ -56,15 +61,20 @@ def split_nodes_link(old_nodes:list[TextNode]) -> list[TextNode]:
     for node in old_nodes:
         if node.text_type != TextType.PLAIN:
             new_nodes.append(node)
-        
-        links = extract_markdown_links(node.text)
-        i = 0
-        for link in links:
-            md = f"[{link[0]}]({link[1]})"
-            if len(node.text[i:i+node.text[i:].index(md)]) > 0:
-                new_nodes.append(TextNode(node.text[i:i+node.text[i:].index(md)], TextType.PLAIN))
-                i += node.text[i:].index(md)
-            new_nodes.append(TextNode(link[0], TextType.LINK, link[1]))
-            i += len(md)
+        else:
+            links = extract_markdown_links(node.text)
+            if len(links) > 0:
+                i = 0
+                for link in links:
+                    md = f"[{link[0]}]({link[1]})"
+                    if len(node.text[i:i+node.text[i:].index(md)]) > 0:
+                        new_nodes.append(TextNode(node.text[i:i+node.text[i:].index(md)], TextType.PLAIN))
+                        i += node.text[i:].index(md)
+                    new_nodes.append(TextNode(link[0], TextType.LINK, link[1]))
+                    i += len(md)
+                if len(node.text[i:]) > 0:
+                    new_nodes.append(TextNode(node.text[i:], TextType.PLAIN))
+            else:
+                new_nodes.append(node)
 
     return new_nodes

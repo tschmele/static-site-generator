@@ -23,12 +23,24 @@ def text_node_to_html_node(node:TextNode) -> LeafNode:
             raise ValueError("Missing url")
         case _:
             raise ValueError("Unknown TextType")
+        
+def text_to_textnodes(text:str) -> list[TextNode]:
+    nodes = [TextNode(text, TextType.PLAIN)]
+    delimiters = {
+        "`": TextType.CODE,
+        "**": TextType.BOLD,
+        "_": TextType.ITALIC
+    }
+    for d in delimiters:
+        nodes = split_nodes_delimiter(nodes, d, delimiters[d])
+    nodes = split_nodes_image(nodes)
+    nodes = split_nodes_link(nodes)
+    return nodes
 
 def main():
-    node = TextNode("This is text with an ![image](https://i.imgur.com/zjjcJKZ.png) and another ![second image](https://i.imgur.com/3elNhQu.png)", TextType.PLAIN)
-    print(f"{node=}")
-    new_nodes = split_nodes_image([node])
-    print(f"{new_nodes=}")
+    text = "This is **text** with an _italic_ word and a `code block` and an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg) and a [link](https://boot.dev)"
+    nodes = text_to_textnodes(text)
+    print(f"{nodes=}")
 
 if __name__ == "__main__":
     main()
