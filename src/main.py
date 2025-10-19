@@ -1,6 +1,7 @@
 from textnode import TextNode, TextType
 from htmlnode import LeafNode, ParentNode
-from splitnodes import split_nodes_delimiter
+from splitnodes import split_nodes_delimiter, split_nodes_image, split_nodes_link
+
 
 def text_node_to_html_node(node:TextNode) -> LeafNode:
     match node.text_type:
@@ -24,9 +25,10 @@ def text_node_to_html_node(node:TextNode) -> LeafNode:
             raise ValueError("Unknown TextType")
 
 def main():
-    node = TextNode("**This** has a **bold word**", TextType.PLAIN)
-    new_nodes = split_nodes_delimiter([node], "**", TextType.BOLD)
-    print(new_nodes)
+    node = TextNode("This is text with an ![image](https://i.imgur.com/zjjcJKZ.png) and another ![second image](https://i.imgur.com/3elNhQu.png)", TextType.PLAIN)
+    print(f"{node=}")
+    new_nodes = split_nodes_image([node])
+    print(f"{new_nodes=}")
 
 if __name__ == "__main__":
     main()

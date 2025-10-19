@@ -1,4 +1,15 @@
 from textnode import TextNode, TextType
+import re
+
+IMAGES = r"!\[([^\[\]]*)\]\(([^\(\)]*)\)"
+LINKS = r"(?<!!)\[([^\[\]]*)\]\(([^\(\)]*)\)"
+
+
+def extract_markdown_images(text:str) -> list[tuple[str,str]]:
+    return re.findall(IMAGES, text)
+
+def extract_markdown_links(text:str) -> list[tuple[str,str]]:
+    return re.findall(LINKS, text)
 
 
 def split_nodes_delimiter(old_nodes:list[TextNode], delimiter:str, text_type:TextType) -> list[TextNode]:
@@ -20,4 +31,40 @@ def split_nodes_delimiter(old_nodes:list[TextNode], delimiter:str, text_type:Tex
                     index += len(t)
                     new_nodes.append(TextNode(t, TextType.PLAIN))
             
+    return new_nodes
+
+def split_nodes_image(old_nodes:list[TextNode]) -> list[TextNode]:
+    new_nodes = []
+    for node in old_nodes:
+        if node.text_type != TextType.PLAIN:
+            new_nodes.append(node)
+        
+        images = extract_markdown_images(node.text)
+        i = 0
+        for img in images:
+            md = f"![{img[0]}]({img[1]})"
+            if len(node.text[i:i+node.text[i:].index(md)]) > 0:
+                new_nodes.append(TextNode(node.text[i:i+node.text[i:].index(md)], TextType.PLAIN))
+                i += node.text[i:].index(md)
+            new_nodes.append(TextNode(img[0], TextType.IMAGE, img[1]))
+            i += len(md)
+
+    return new_nodes
+
+def split_nodes_link(old_nodes:list[TextNode]) -> list[TextNode]:
+    new_nodes = []
+    for node in old_nodes:
+        if node.text_type != TextType.PLAIN:
+            new_nodes.append(node)
+        
+        links = extract_markdown_links(node.text)
+        i = 0
+        for link in links:
+            md = f"[{link[0]}]({link[1]})"
+            if len(node.text[i:i+node.text[i:].index(md)]) > 0:
+                new_nodes.append(TextNode(node.text[i:i+node.text[i:].index(md)], TextType.PLAIN))
+                i += node.text[i:].index(md)
+            new_nodes.append(TextNode(link[0], TextType.LINK, link[1]))
+            i += len(md)
+
     return new_nodes
