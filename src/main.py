@@ -5,8 +5,8 @@ from copyfiles import clean_directory, copy_files
 
 def main():
     basepath = "/"
-    if len(sys.argv) > 0:
-        basepath = sys.argv[0]
+    if len(sys.argv) > 1:
+        basepath = sys.argv[1]
     clean_directory("docs/")
     copy_files("static/", "docs/")
     generate_pages_recursive("content/", "template.html", "docs/", basepath)
