@@ -26,3 +26,13 @@ def generate_page(src_path:str, template_path:str, dest_path:str):
     
     with open(dest_path, "w") as f:
         f.write(template)
+
+def generate_pages_recursive(src_dir_path:str, template_path:str, dest_dir_path:str):
+    for file in os.listdir(src_dir_path):
+        src = join(src_dir_path, file)
+        dst = join(dest_dir_path, file)
+        if isfile(src) and ".md" in file:
+            generate_page(src, template_path, dst[:-3]+".html")
+        else:
+            os.mkdir(dst)
+            generate_pages_recursive(src, template_path, dst)
