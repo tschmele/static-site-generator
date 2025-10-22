@@ -1,11 +1,15 @@
+import sys
 from generate_page import generate_pages_recursive
 from copyfiles import clean_directory, copy_files
 
 
 def main():
-    clean_directory("public/")
-    copy_files("static/", "public/")
-    generate_pages_recursive("content/", "template.html", "public/")
+    basepath = "/"
+    if len(sys.argv) > 0:
+        basepath = sys.argv[0]
+    clean_directory("docs/")
+    copy_files("static/", "docs/")
+    generate_pages_recursive("content/", "template.html", "docs/", basepath)
 
 if __name__ == "__main__":
     main()
