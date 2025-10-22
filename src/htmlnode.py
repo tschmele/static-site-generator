@@ -1,7 +1,7 @@
 
 
 class HTMLNode():
-    def __init__(self, tag:str|None=None, value:str|None=None, children:list[HTMLNode]|None=None, props:dict[str,str]|None=None):
+    def __init__(self, tag:str|None=None, value:str|None=None, children:list[LeafNode|ParentNode]|list[LeafNode]|list[ParentNode]|None=None, props:dict[str,str]|None=None):
         self.tag = tag
         self.value = value
         self.children = children
@@ -41,7 +41,7 @@ class LeafNode(HTMLNode):
 
 
 class ParentNode(HTMLNode):
-    def __init__(self, tag: str, children: list[HTMLNode], props: dict[str, str] | None = None):
+    def __init__(self, tag: str, children: list[LeafNode|ParentNode]|list[LeafNode]|list[ParentNode], props: dict[str, str] | None = None):
         super().__init__(tag, None, children, props)
     
     def to_html(self):
