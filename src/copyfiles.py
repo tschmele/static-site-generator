@@ -18,7 +18,3 @@ def copy_files(source:str, destination:str):
             new_dir = os.mkdir(join(destination, file))
             copy_files(path, join(destination, file))
 
-def copy_static_files(source:str, destination:str):
-    clean_directory(destination)
-    copy_files(source, destination)
-

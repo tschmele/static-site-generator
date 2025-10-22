@@ -41,3 +41,11 @@ def block_to_block_type(block:str) -> BlockType:
                     continue
             return md
     return BlockType.PARAGRAPH
+
+def extract_title(markdown:str) -> str:
+    headers = re.findall(MARKDOWN_REGEX[BlockType.HEADING], markdown)
+    for h in headers:
+        splits = h.split(" ", 1)
+        if splits[0].count("#") == 1:
+            return splits[1]
+    raise ValueError("markdown contains no title")

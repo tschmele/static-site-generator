@@ -19,7 +19,7 @@ def text_node_to_html_node(node:TextNode) -> LeafNode:
             raise ValueError("Missing url")
         case TextType.IMAGE:
             if node.url:
-                return LeafNode("img", "", {"src":node.url, "alt":node.text})
+                return LeafNode("img", " ", {"src":node.url, "alt":node.text})
             raise ValueError("Missing url")
         case _:
             raise ValueError("Unknown TextType")
